@@ -774,6 +774,7 @@ RequiredResult<InputEvent> InputEventMouseButton::xformed_by(const Transform2D &
 	mb->set_factor(factor);
 	mb->set_button_index(button_index);
 
+	mb->set_timestamp_usec(get_timestamp_usec());
 	mb->merge_meta_from(this);
 
 	return mb;
@@ -996,6 +997,7 @@ RequiredResult<InputEvent> InputEventMouseMotion::xformed_by(const Transform2D &
 	mm->set_velocity(p_xform.basis_xform(get_velocity()));
 	mm->set_screen_velocity(get_screen_velocity());
 
+	mm->set_timestamp_usec(get_timestamp_usec());
 	mm->merge_meta_from(this);
 
 	return mm;
@@ -1392,6 +1394,7 @@ RequiredResult<InputEvent> InputEventScreenTouch::xformed_by(const Transform2D &
 	st->set_canceled(canceled);
 	st->set_double_tap(double_tap);
 
+	st->set_timestamp_usec(get_timestamp_usec());
 	st->merge_meta_from(this);
 
 	return st;
@@ -1522,6 +1525,7 @@ RequiredResult<InputEvent> InputEventScreenDrag::xformed_by(const Transform2D &p
 	sd->set_velocity(p_xform.basis_xform(velocity));
 	sd->set_screen_velocity(get_screen_velocity());
 
+	sd->set_timestamp_usec(get_timestamp_usec());
 	sd->merge_meta_from(this);
 
 	return sd;
@@ -1735,6 +1739,7 @@ RequiredResult<InputEvent> InputEventMagnifyGesture::xformed_by(const Transform2
 	ev->set_position(p_xform.xform(get_position() + p_local_ofs));
 	ev->set_factor(get_factor());
 
+	ev->set_timestamp_usec(get_timestamp_usec());
 	ev->merge_meta_from(this);
 
 	return ev;
@@ -1777,6 +1782,7 @@ RequiredResult<InputEvent> InputEventPanGesture::xformed_by(const Transform2D &p
 	ev->set_position(p_xform.xform(get_position() + p_local_ofs));
 	ev->set_delta(get_delta());
 
+	ev->set_timestamp_usec(get_timestamp_usec());
 	ev->merge_meta_from(this);
 
 	return ev;
