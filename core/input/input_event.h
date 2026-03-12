@@ -53,6 +53,7 @@ class InputEvent : public Resource {
 	GDCLASS(InputEvent, Resource);
 
 	int device = 0;
+	uint64_t timestamp_usec = 0;
 
 protected:
 	bool canceled = false;
@@ -61,6 +62,8 @@ protected:
 	static void _bind_methods();
 
 public:
+	void set_timestamp_usec(uint64_t p_timestamp) { timestamp_usec = p_timestamp; }
+	uint64_t get_timestamp_usec() const { return timestamp_usec; }
 	static constexpr int DEVICE_ID_EMULATION = -1;
 	static constexpr int DEVICE_ID_INTERNAL = -2;
 	static constexpr int DEVICE_ID_KEYBOARD = 16; // IDs 0-15 are reserved for joypads.

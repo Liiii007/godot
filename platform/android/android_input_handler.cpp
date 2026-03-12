@@ -146,7 +146,7 @@ void AndroidInputHandler::_cancel_all_touch() {
 	touch.clear();
 }
 
-void AndroidInputHandler::_parse_all_touch(bool p_pressed, bool p_canceled, bool p_double_tap) {
+void AndroidInputHandler::_parse_all_touch(bool p_pressed, bool p_canceled, bool p_double_tap, uint64_t p_timestamp_usec) {
 	if (touch.size()) {
 		//end all if exist
 		for (int i = 0; i < touch.size(); i++) {
@@ -157,6 +157,7 @@ void AndroidInputHandler::_parse_all_touch(bool p_pressed, bool p_canceled, bool
 			ev->set_canceled(p_canceled);
 			ev->set_position(touch[i].pos);
 			ev->set_double_tap(p_double_tap);
+			ev->set_timestamp_usec(p_timestamp_usec);
 			Input::get_singleton()->parse_input_event(ev);
 		}
 	}
@@ -167,7 +168,7 @@ void AndroidInputHandler::_release_all_touch() {
 	touch.clear();
 }
 
-void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const Vector<TouchPos> &p_points, bool p_double_tap) {
+void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const Vector<TouchPos> &p_points, bool p_double_tap, uint64_t p_timestamp_usec) {
 	switch (p_event) {
 		case AMOTION_EVENT_ACTION_DOWN: { //gesture begin
 			// Release any remaining touches or mouse event
@@ -183,7 +184,7 @@ void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const 
 			}
 
 			//send touch
-			_parse_all_touch(true, false, p_double_tap);
+			_parse_all_touch(true, false, p_double_tap, p_timestamp_usec);
 
 		} break;
 		case AMOTION_EVENT_ACTION_MOVE: { //motion
@@ -214,6 +215,7 @@ void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const 
 				ev->set_relative_screen_position(ev->get_relative());
 				ev->set_pressure(p_points[idx].pressure);
 				ev->set_tilt(p_points[idx].tilt);
+				ev->set_timestamp_usec(p_timestamp_usec);
 				Input::get_singleton()->parse_input_event(ev);
 				touch.write[i].pos = p_points[idx].pos;
 			}
@@ -237,6 +239,7 @@ void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const 
 					ev->set_index(tp.id);
 					ev->set_pressed(true);
 					ev->set_position(tp.pos);
+					ev->set_timestamp_usec(p_timestamp_usec);
 					Input::get_singleton()->parse_input_event(ev);
 
 					break;
@@ -251,6 +254,7 @@ void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const 
 					ev->set_index(touch[i].id);
 					ev->set_pressed(false);
 					ev->set_position(touch[i].pos);
+					ev->set_timestamp_usec(p_timestamp_usec);
 					Input::get_singleton()->parse_input_event(ev);
 					touch.remove_at(i);
 

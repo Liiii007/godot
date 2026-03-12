@@ -270,7 +270,7 @@ void DisplayServerAppleEmbedded::_window_callback(const Callable &p_callable, co
 
 // MARK: Touches
 
-void DisplayServerAppleEmbedded::touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_double_click) {
+void DisplayServerAppleEmbedded::touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_double_click, uint64_t p_timestamp_usec) {
 	Ref<InputEventScreenTouch> ev;
 	ev.instantiate();
 
@@ -278,10 +278,11 @@ void DisplayServerAppleEmbedded::touch_press(int p_idx, int p_x, int p_y, bool p
 	ev->set_pressed(p_pressed);
 	ev->set_position(Vector2(p_x, p_y));
 	ev->set_double_tap(p_double_click);
+	ev->set_timestamp_usec(p_timestamp_usec);
 	perform_event(ev);
 }
 
-void DisplayServerAppleEmbedded::touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Vector2 p_tilt) {
+void DisplayServerAppleEmbedded::touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Vector2 p_tilt, uint64_t p_timestamp_usec) {
 	Ref<InputEventScreenDrag> ev;
 	ev.instantiate();
 	ev->set_index(p_idx);
@@ -290,6 +291,7 @@ void DisplayServerAppleEmbedded::touch_drag(int p_idx, int p_prev_x, int p_prev_
 	ev->set_position(Vector2(p_x, p_y));
 	ev->set_relative(Vector2(p_x - p_prev_x, p_y - p_prev_y));
 	ev->set_relative_screen_position(ev->get_relative());
+	ev->set_timestamp_usec(p_timestamp_usec);
 	perform_event(ev);
 }
 

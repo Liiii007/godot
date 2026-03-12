@@ -130,8 +130,8 @@ public:
 
 	// MARK: Touches and Apple Pencil
 
-	void touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_double_click);
-	void touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Vector2 p_tilt);
+	void touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_double_click, uint64_t p_timestamp_usec = 0);
+	void touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Vector2 p_tilt, uint64_t p_timestamp_usec = 0);
 	void touches_canceled(int p_idx);
 
 	// MARK: Keyboard

@@ -37,6 +37,7 @@
 #include "core/config/project_settings.h"
 #include "core/os/keyboard.h"
 #include "core/string/ustring.h"
+#include "drivers/unix/os_unix.h"
 
 #import <CoreMotion/CoreMotion.h>
 
@@ -359,7 +360,8 @@ static const float earth_gravity = 9.80665;
 		int tid = [self getTouchIDForTouch:touch];
 		ERR_FAIL_COND(tid == -1);
 		CGPoint touchPoint = [touch locationInView:self];
-		DisplayServerAppleEmbedded::get_singleton()->touch_press(tid, touchPoint.x * self.contentScaleFactor, touchPoint.y * self.contentScaleFactor, true, touch.tapCount > 1);
+		uint64_t timestamp = (uint64_t)(touch.timestamp * 1000000.0) - OS_Unix::get_clock_start_usec();
+		DisplayServerAppleEmbedded::get_singleton()->touch_press(tid, touchPoint.x * self.contentScaleFactor, touchPoint.y * self.contentScaleFactor, true, touch.tapCount > 1, timestamp);
 	}
 }
 
@@ -371,7 +373,8 @@ static const float earth_gravity = 9.80665;
 		CGPoint prev_point = [touch previousLocationInView:self];
 		CGFloat alt = [touch altitudeAngle];
 		CGVector azim = [touch azimuthUnitVectorInView:self];
-		DisplayServerAppleEmbedded::get_singleton()->touch_drag(tid, prev_point.x * self.contentScaleFactor, prev_point.y * self.contentScaleFactor, touchPoint.x * self.contentScaleFactor, touchPoint.y * self.contentScaleFactor, [touch force] / [touch maximumPossibleForce], Vector2(azim.dx, azim.dy) * Math::cos(alt));
+		uint64_t timestamp = (uint64_t)(touch.timestamp * 1000000.0) - OS_Unix::get_clock_start_usec();
+		DisplayServerAppleEmbedded::get_singleton()->touch_drag(tid, prev_point.x * self.contentScaleFactor, prev_point.y * self.contentScaleFactor, touchPoint.x * self.contentScaleFactor, touchPoint.y * self.contentScaleFactor, [touch force] / [touch maximumPossibleForce], Vector2(azim.dx, azim.dy) * Math::cos(alt), timestamp);
 	}
 }
 
@@ -381,7 +384,8 @@ static const float earth_gravity = 9.80665;
 		ERR_FAIL_COND(tid == -1);
 		[self removeTouch:touch];
 		CGPoint touchPoint = [touch locationInView:self];
-		DisplayServerAppleEmbedded::get_singleton()->touch_press(tid, touchPoint.x * self.contentScaleFactor, touchPoint.y * self.contentScaleFactor, false, false);
+		uint64_t timestamp = (uint64_t)(touch.timestamp * 1000000.0) - OS_Unix::get_clock_start_usec();
+		DisplayServerAppleEmbedded::get_singleton()->touch_press(tid, touchPoint.x * self.contentScaleFactor, touchPoint.y * self.contentScaleFactor, false, false, timestamp);
 	}
 }
 

@@ -131,6 +131,8 @@ void InputEvent::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("xformed_by", "xform", "local_ofs"), &InputEvent::xformed_by, DEFVAL(Vector2()));
 
+	ClassDB::bind_method(D_METHOD("get_timestamp_usec"), &InputEvent::get_timestamp_usec);
+
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "device"), "set_device", "get_device");
 
 	BIND_CONSTANT(DEVICE_ID_EMULATION);

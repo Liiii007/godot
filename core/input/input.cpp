@@ -1521,6 +1521,10 @@ void Input::parse_input_event(RequiredParam<InputEvent> rp_event) {
 
 	EXTRACT_PARAM_OR_FAIL(p_event, rp_event);
 
+	if (p_event->get_timestamp_usec() == 0) {
+		p_event->set_timestamp_usec(OS::get_singleton()->get_ticks_usec());
+	}
+
 #ifdef DEBUG_ENABLED
 	uint64_t curr_frame = Engine::get_singleton()->get_process_frames();
 	if (curr_frame != last_parsed_frame) {

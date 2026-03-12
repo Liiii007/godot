@@ -153,11 +153,13 @@ final class InputEventRunnable implements Runnable {
 	// Touch event fields and setter
 	private int actionPointerId;
 	private int pointerCount;
+	private long eventTimeMsec;
 	private final float[] positions = new float[MAX_TOUCH_POINTER_COUNT * 6]; // pointerId1, x1, y1, pressure1, tiltX1, tiltY1, pointerId2, etc...
 	void setTouchEvent(MotionEvent event, int eventAction, boolean doubleTap) {
 		this.currentEventType = EventType.TOUCH;
 		this.eventAction = eventAction;
 		this.doubleTap = doubleTap;
+		this.eventTimeMsec = event.getEventTime();
 		this.actionPointerId = event.getPointerId(event.getActionIndex());
 		this.pointerCount = Math.min(event.getPointerCount(), MAX_TOUCH_POINTER_COUNT);
 		for (int i = 0; i < pointerCount; i++) {
@@ -281,13 +283,14 @@ final class InputEventRunnable implements Runnable {
 							tiltY);
 					break;
 
-				case TOUCH:
-					GodotLib.dispatchTouchEvent(
-							eventAction,
-							actionPointerId,
-							pointerCount,
-							positions,
-							doubleTap);
+			case TOUCH:
+				GodotLib.dispatchTouchEvent(
+						eventAction,
+						actionPointerId,
+						pointerCount,
+						positions,
+						doubleTap,
+						eventTimeMsec);
 					break;
 
 				case MAGNIFY:

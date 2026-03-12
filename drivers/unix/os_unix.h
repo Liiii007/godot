@@ -86,6 +86,8 @@ protected:
 public:
 	OS_Unix();
 
+	static uint64_t get_clock_start_usec();
+
 	virtual Vector<String> get_video_adapter_driver_info() const override;
 
 	virtual String get_stdin_string(int64_t p_buffer_size = 1024) override;
